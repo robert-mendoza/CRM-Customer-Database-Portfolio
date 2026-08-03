@@ -1,43 +1,48 @@
 """
-Dataset loading services.
+Dataset loader for the CRM Dataset Build Framework.
 
-This module loads one or more dataset part files defined by a DatasetConfig
-instance and combines them into a single LoadedDataset.
+This module is responsible for loading dataset records from one or more
+Python source files into a single ``LoadedDataset`` instance.
 
-Responsibilities
-----------------
-* Import dataset modules.
-* Read the configured dataset variable.
-* Validate the basic dataset structure.
-* Merge records from all input files.
-* Return a LoadedDataset instance.
+Responsibilities:
+    * Validate loader configuration.
+    * Import dataset modules.
+    * Extract dataset variables.
+    * Aggregate records.
+    * Return a LoadedDataset instance.
 
-The loader intentionally performs only structural validation. Business rule
-validation is handled by validator.py.
+The loader intentionally does not perform business-rule validation,
+duplicate detection, schema validation, merge operations, or output
+generation.
 """
 
 from __future__ import annotations
 
-from types import ModuleType
-from typing import Any
-
-from .exceptions import (
-    DatasetConfigurationError,
-    DatasetImportError,
-    DatasetValidationError,
-)
+from .exceptions import ConfigurationError
 from .logger import BuildLogger
 from .models import (
     DatasetConfig,
     LoadedDataset,
     PartFile,
+    Record,
 )
-from .utils.importer import import_python_module
+from .utils.importer import (
+    extract_dataset_variable,
+    import_python_module,
+)
+
+__all__ = [
+    "DatasetLoader",
+]
 
 
 class DatasetLoader:
     """
-    Loads dataset records from one or more Python modules.
+    Loads dataset records from configured source files.
+
+    The loader coordinates configuration validation, module importing,
+    dataset extraction, and record aggregation. Validation of dataset
+    contents is intentionally delegated to the validator module.
     """
 
     def __init__(
@@ -49,198 +54,195 @@ class DatasetLoader:
 
         Args:
             logger:
-                Shared framework logger.
+                Framework logger.
+
+        Raises:
+            TypeError:
+                If ``logger`` is not a ``BuildLogger`` instance.
         """
+        if not isinstance(logger, BuildLogger):
+            raise TypeError(
+                "logger must be an instance of BuildLogger."
+            )
 
         self._logger = logger
-
-    # ==========================================================
-    # Public API
-    # ==========================================================
-
-    def load(
+            def load(
         self,
         config: DatasetConfig,
     ) -> LoadedDataset:
         """
-        Load all dataset parts defined by the configuration.
+        Load and aggregate records from all configured dataset parts.
 
         Args:
             config:
-                Dataset configuration.
+                Dataset build configuration.
 
         Returns:
-            Fully populated LoadedDataset.
+            A populated ``LoadedDataset`` instance.
+
+        Raises:
+            ConfigurationError:
+                If the supplied configuration is invalid.
         """
+        self._validate_configuration(config)
 
         self._logger.section(
             f"Loading dataset: {config.name}"
         )
 
-        records: list[dict[str, Any]] = []
+        records: list[Record] = []
 
         for part in config.input_files:
             records.extend(
                 self._load_part(
-                    part,
-                    config,
+                    part=part,
+                    config=config,
                 )
             )
-        self._logger.success(
-            (
-                f"Loaded {len(records):,} records "
-                f"from {len(config.input_files)} part file(s)."
-            )
-        )
 
-        return LoadedDataset(
+        loaded_dataset = LoadedDataset(
             config=config,
             records=records,
+            source_files=config.input_files,
         )
 
-    # ==========================================================
-    # Private Methods
-    # ==========================================================
+        self._log_summary(loaded_dataset)
 
-    def _load_part(
+        return loaded_dataset
+
+    def _validate_configuration(
         self,
-        part: PartFile,
         config: DatasetConfig,
-    ) -> list[dict[str, Any]]:
+    ) -> None:
         """
-        Load a single dataset part.
+        Validate the loader configuration.
+
+        This method performs structural validation only. Dataset content
+        validation is handled by the validator module.
 
         Args:
-            part:
-                Dataset part definition.
-
-            config:
-                Parent dataset configuration.
-
-        Returns:
-            Dataset records loaded from the part file.
-        """
-
-        self._logger.info(
-            f"Loading part: {part.name}"
-        )
-
-        module = self._import_module(
-            part,
-        )
-
-        dataset = self._extract_dataset(
-            module,
-            config,
-            part,
-        )
-
-        self._validate_dataset(
-            dataset,
-            part,
-        )
-
-        self._logger.info(
-            (
-                f"{part.name}: "
-                f"{len(dataset):,} record(s)"
-            )
-        )
-
-        return dataset
-
-    def _import_module(
-        self,
-        part: PartFile,
-    ) -> ModuleType:
-        """
-        Import a dataset module.
-
-        Args:
-            part:
-                Dataset part definition.
-
-        Returns:
-            Imported Python module.
-
-        Raises:
-            DatasetImportError:
-                If the module cannot be imported.
-        """
-
-        self._logger.info(
-            f"Importing {part.path}"
-        )
-
-        try:
-            return import_python_module(
-                part.path,
-            )
-
-        except Exception as exc:
-            raise DatasetImportError(
-                (
-                    f"Unable to import "
-                    f"'{part.path}'."
-                )
-            ) from exc
-
-    def _extract_dataset(
-        self,
-        module: ModuleType,
-        config: DatasetConfig,
-        part: PartFile,
-    ) -> list[dict[str, Any]]:
-        """
-        Read the configured dataset variable.
-
-        Args:
-            module:
-                Imported module.
-
             config:
                 Dataset configuration.
 
+        Raises:
+            ConfigurationError:
+                If the configuration is incomplete or invalid.
+        """
+        if not isinstance(config, DatasetConfig):
+            raise ConfigurationError(
+                "config must be an instance of DatasetConfig."
+            )
+
+        if not config.name.strip():
+            raise ConfigurationError(
+                "Configuration name cannot be empty."
+            )
+
+        if not config.variable_name.strip():
+            raise ConfigurationError(
+                "Dataset variable name cannot be empty."
+            )
+
+        if not config.input_files:
+            raise ConfigurationError(
+                "At least one input file must be configured."
+            )
+
+        for part in config.input_files:
+
+            if not isinstance(part, PartFile):
+                raise ConfigurationError(
+                    "All input files must be PartFile instances."
+                )
+
+            if not part.name.strip():
+                raise ConfigurationError(
+                    "Part file name cannot be empty."
+                )
+
+            if part.path.suffix.lower() != ".py":
+                raise ConfigurationError(
+                    f"'{part.path}' is not a Python source file."
+                )
+                def _load_part(
+        self,
+        part: PartFile,
+        config: DatasetConfig,
+    ) -> list[Record]:
+        """
+        Load records from a single dataset source file.
+
+        This method imports the configured Python module, extracts the
+        dataset variable defined by the configuration, and returns the
+        resulting records.
+
+        Args:
             part:
-                Dataset part.
+                Dataset source file definition.
+
+            config:
+                Dataset build configuration.
 
         Returns:
-            Dataset records.
+            The records extracted from the dataset module.
 
         Raises:
-            DatasetConfigurationError:
-                If the configured variable is missing or invalid.
+            DatasetNotFoundError:
+                If the dataset file does not exist.
+
+            DatasetImportError:
+                If the dataset module cannot be imported.
+
+            DatasetVariableError:
+                If the configured dataset variable is missing.
+
+            DatasetFormatError:
+                If the extracted dataset has an invalid structure.
         """
-
-        variable_name = config.variable_name
-
-        if not hasattr(
-            module,
-            variable_name,
-        ):
-            raise DatasetConfigurationError(
-                (
-                    f"{part.name} does not define "
-                    f"'{variable_name}'."
-                )
-            )
-
-        dataset = getattr(
-            module,
-            variable_name,
+        self._logger.info(
+            f"Loading '{part.name}' "
+            f"from '{part.path.name}'."
         )
 
-        if not isinstance(
-            dataset,
-            list,
-        ):
-            raise DatasetConfigurationError(
-                (
-                    f"'{variable_name}' in "
-                    f"{part.name} "
-                    "must be a list."
-                )
-            )
+        module = import_python_module(
+            part.path,
+        )
 
-        return dataset
-scripts/merge_engine/loader.py
+        records = extract_dataset_variable(
+            module=module,
+            variable_name=config.variable_name,
+        )
+
+        self._logger.success(
+            f"Loaded {len(records)} records "
+            f"from '{part.name}'."
+        )
+
+        return records
+
+    def _log_summary(
+        self,
+        dataset: LoadedDataset,
+    ) -> None:
+        """
+        Log a summary of the completed loading operation.
+
+        Args:
+            dataset:
+                The loaded dataset.
+        """
+        self._logger.section(
+            "Dataset loading completed"
+        )
+
+        self._logger.info(
+            f"Dataset name : {dataset.config.name}"
+        )
+
+        self._logger.info(
+            f"Source files : {len(dataset.source_files)}"
+        )
+
+        self._logger.info(
+            f"Records loaded : {dataset.record_count}"
+        )
