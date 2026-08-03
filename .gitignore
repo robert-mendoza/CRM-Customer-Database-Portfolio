@@ -1,3 +1,40 @@
-dir
-cd "C:\Users\Robert\CRM-Customer-Database-Portfolio\scripts"
-dir
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# Build
+build/
+dist/
+
+# Coverage
+.coverage
+htmlcov/
+
+# Pytest
+.pytest_cache/
+
+# Mypy
+.mypy_cache/
+
+# Ruff
+.ruff_cache/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Logs
+*.log
+
+# Temporary
+*.tmp
+*.bak
