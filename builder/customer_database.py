@@ -15,6 +15,7 @@ from __future__ import annotations
 from collections.abc import Sequence
 
 from openpyxl import Workbook
+from openpyxl.worksheet.datavalidation import DataValidation
 from openpyxl.worksheet.worksheet import Worksheet
 
 from builder.constants import SheetNames
@@ -22,6 +23,13 @@ from builder.utils import (
     apply_headers,
     apply_title,
     create_excel_table,
+)
+from builder.validation_lists import (
+    CUSTOMER_STATUSES,
+    CUSTOMER_TYPES,
+    INDUSTRIES,
+    LEAD_SOURCES,
+    PRIORITIES,
 )
 
 
@@ -39,6 +47,61 @@ CUSTOMER_HEADERS: tuple[str, ...] = (
 )
 
 CUSTOMER_TABLE_NAME = "CustomerDatabaseTable"
+
+_VALIDATION_START_ROW = 5
+_VALIDATION_END_ROW = 1004
+
+
+def _create_list_validation(
+    worksheet: Worksheet,
+    values: Sequence[str],
+    column: str,
+    prompt_title: str,
+) -> DataValidation:
+    """Create and apply a list validation to a worksheet column.
+
+    Args:
+        worksheet: Target worksheet.
+        values: Allowed values.
+        column: Excel column letter.
+        prompt_title: Input prompt title.
+
+    Returns:
+        The configured DataValidation object.
+
+    Raises:
+        ValueError: If values is empty.
+    """
+    if not values:
+        raise ValueError(
+            f"Validation values for column {column} cannot be empty."
+        )
+
+    escaped_values = ",".join(
+        value.replace('"', '""')
+        for value in values
+    )
+
+    validation = DataValidation(
+        type="list",
+        formula1=f'"{escaped_values}"',
+        allow_blank=True,
+    )
+
+    validation.errorTitle = "Invalid value"
+    validation.error = "Select a value from the drop-down list."
+    validation.promptTitle = prompt_title
+    validation.prompt = "Select a value from the drop-down list."
+    validation.showErrorMessage = True
+    validation.showInputMessage = True
+
+    validation.add(
+        f"{column}{_VALIDATION_START_ROW}:{column}{_VALIDATION_END_ROW}"
+    )
+
+    worksheet.add_data_validation(validation)
+
+    return validation
 
 
 def build_customer_database(
@@ -110,6 +173,41 @@ def build_customer_database(
         end_row=content_start_row,
         start_column=1,
         end_column=table_end_column,
+    )
+
+    _create_list_validation(
+        worksheet,
+        INDUSTRIES,
+        "F",
+        "Industry",
+    )
+
+    _create_list_validation(
+        worksheet,
+        CUSTOMER_TYPES,
+        "G",
+        "Customer Type",
+    )
+
+    _create_list_validation(
+        worksheet,
+        CUSTOMER_STATUSES,
+        "H",
+        "Customer Status",
+    )
+
+    _create_list_validation(
+        worksheet,
+        LEAD_SOURCES,
+        "I",
+        "Lead Source",
+    )
+
+    _create_list_validation(
+        worksheet,
+        PRIORITIES,
+        "J",
+        "Priority",
     )
 
     return worksheet
