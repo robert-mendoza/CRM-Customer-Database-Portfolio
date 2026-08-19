@@ -1,9 +1,21 @@
-.venv/
+# Python
 __pycache__/
 *.py[cod]
+*.pyo
 *$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Build/output
 output/
+
+# Testing and coverage
 .pytest_cache/
 .coverage
 htmlcov/
+
+# Editor
 .vscode/
