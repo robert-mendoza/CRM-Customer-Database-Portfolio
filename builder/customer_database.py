@@ -1,7 +1,7 @@
 """Customer database worksheet builder.
 
-This module creates the primary customer database worksheet for the
-CRM Customer Database Builder.
+This module creates the primary customer database worksheet
+for the CRM Customer Database Builder.
 
 Project:
     CRM Customer Database Builder
@@ -20,25 +20,20 @@ from openpyxl.worksheet.worksheet import Worksheet
 
 from builder.constants import SheetNames
 from builder.utils import (
-    apply_headers,
     apply_title,
     create_excel_table,
 )
-from builder.validation_lists import (
-    CUSTOMER_STATUSES,
-    CUSTOMER_TYPES,
-    INDUSTRIES,
-    LEAD_SOURCES,
-    PRIORITIES,
+from builder.validation_names import (
+    build_validation_defined_names,
 )
 
 
 CUSTOMER_HEADERS: tuple[str, ...] = (
     "Customer ID",
-    "Company Name",
-    "Contact Name",
-    "Email Address",
-    "Phone Number",
+    "First Name",
+    "Last Name",
+    "Email",
+    "Phone",
     "Industry",
     "Customer Type",
     "Customer Status",
@@ -54,7 +49,7 @@ _VALIDATION_END_ROW = 1004
 
 def _create_list_validation(
     worksheet: Worksheet,
-    values: Sequence[str],
+    formula: str,
     column: str,
     prompt_title: str,
 ) -> DataValidation:
@@ -62,7 +57,7 @@ def _create_list_validation(
 
     Args:
         worksheet: Target worksheet.
-        values: Allowed values.
+        formula: Excel formula referencing a validation list.
         column: Excel column letter.
         prompt_title: Input prompt title.
 
@@ -70,21 +65,16 @@ def _create_list_validation(
         The configured DataValidation object.
 
     Raises:
-        ValueError: If values is empty.
+        ValueError: If formula is empty.
     """
-    if not values:
+    if not formula:
         raise ValueError(
-            f"Validation values for column {column} cannot be empty."
+            f"Validation formula for column {column} cannot be empty."
         )
-
-    escaped_values = ",".join(
-        value.replace('"', '""')
-        for value in values
-    )
 
     validation = DataValidation(
         type="list",
-        formula1=f'"{escaped_values}"',
+        formula1=formula,
         allow_blank=True,
     )
 
@@ -108,107 +98,76 @@ def build_customer_database(
     workbook: Workbook,
     headers: Sequence[str] = CUSTOMER_HEADERS,
 ) -> Worksheet:
-    """Create and initialize the customer database worksheet.
+    """Build the customer database worksheet.
 
     Args:
         workbook: Target workbook.
-        headers: Ordered customer database column headers.
+        headers: Customer database column headers.
 
     Returns:
-        The initialized customer database worksheet.
-
-    Raises:
-        TypeError: If workbook is not an openpyxl Workbook instance.
-        ValueError: If headers are empty or contain duplicate values.
+        The completed customer database worksheet.
     """
-    if not isinstance(workbook, Workbook):
-        raise TypeError("workbook must be an openpyxl Workbook instance.")
-
-    normalized_headers = tuple(
-        str(header).strip()
-        for header in headers
+    worksheet = workbook.create_sheet(
+        title=SheetNames.customer_database,
     )
 
-    if not normalized_headers:
-        raise ValueError(
-            "Customer database headers cannot be empty."
-        )
-
-    if any(not header for header in normalized_headers):
-        raise ValueError(
-            "Customer database headers cannot contain empty values."
-        )
-
-    if len(normalized_headers) != len(set(normalized_headers)):
-        raise ValueError(
-            "Customer database headers must be unique."
-        )
-
-    worksheet_name = SheetNames.customer_database
-
-    if worksheet_name in workbook.sheetnames:
-        worksheet = workbook[worksheet_name]
-    else:
-        worksheet = workbook.create_sheet(worksheet_name)
-
-    content_start_row = apply_title(
+    apply_title(
         worksheet,
-        title="Customer Database",
-        subtitle="CRM customer and contact records",
+        "Customer Database",
     )
 
-    apply_headers(
-        worksheet,
-        normalized_headers,
-        row=content_start_row,
-        enable_filter=True,
-    )
-
-    table_end_column = len(normalized_headers)
+    for column_index, header in enumerate(headers, start=1):
+        worksheet.cell(
+            row=4,
+            column=column_index,
+            value=header,
+        )
 
     create_excel_table(
-        worksheet,
+        worksheet=worksheet,
         table_name=CUSTOMER_TABLE_NAME,
-        start_row=content_start_row,
-        end_row=content_start_row,
+        start_row=4,
+        end_row=4,
         start_column=1,
-        end_column=table_end_column,
+        end_column=len(headers),
     )
 
     _create_list_validation(
-        worksheet,
-        INDUSTRIES,
-        "F",
-        "Industry",
+        worksheet=worksheet,
+        formula="=Industries",
+        column="F",
+        prompt_title="Industry",
     )
 
     _create_list_validation(
-        worksheet,
-        CUSTOMER_TYPES,
-        "G",
-        "Customer Type",
+        worksheet=worksheet,
+        formula="=CustomerTypes",
+        column="G",
+        prompt_title="Customer Type",
     )
 
     _create_list_validation(
-        worksheet,
-        CUSTOMER_STATUSES,
-        "H",
-        "Customer Status",
+        worksheet=worksheet,
+        formula="=CustomerStatuses",
+        column="H",
+        prompt_title="Customer Status",
     )
 
     _create_list_validation(
-        worksheet,
-        LEAD_SOURCES,
-        "I",
-        "Lead Source",
+        worksheet=worksheet,
+        formula="=LeadSources",
+        column="I",
+        prompt_title="Lead Source",
     )
 
     _create_list_validation(
-        worksheet,
-        PRIORITIES,
-        "J",
-        "Priority",
+        worksheet=worksheet,
+        formula="=Priorities",
+        column="J",
+        prompt_title="Priority",
     )
+
+    build_validation_defined_names(workbook)
 
     return worksheet
 
