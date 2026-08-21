@@ -1,21 +1,12 @@
-# Python
 __pycache__/
 *.py[cod]
-*.pyo
-*$py.class
-
-# Virtual environments
+.pytest_cache/
 .venv/
 venv/
-env/
-
-# Build/output
-output/
-
-# Testing and coverage
-.pytest_cache/
-.coverage
-htmlcov/
-
-# Editor
-.vscode/
+*.egg-info/
+.DS_Store
+Thumbs.db
+output/*.tmp.xlsx
+output/*~
+output/*.xlsx
+!output/Customer_Data_Management_Workbook.xlsx

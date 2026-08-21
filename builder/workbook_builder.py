@@ -20,6 +20,7 @@ def build_workbook(output_path: Path) -> Path:
     """Build and save the current CRM workbook."""
     if not isinstance(output_path, Path):
         raise TypeError("output_path must be a pathlib.Path instance.")
+
     if output_path.name == "":
         raise ValueError("output_path must include a filename.")
 
@@ -38,7 +39,5 @@ def build_workbook(output_path: Path) -> Path:
     build_instructions(workbook)
 
     workbook.save(output_path)
+
     return output_path
-
-
-__all__ = ["build_workbook"]
