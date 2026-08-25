@@ -1,11 +1,4 @@
-"""Activity Log worksheet builder for the CRM Customer Database Builder.
-
-Project:
-    CRM Customer Database Builder
-
-Author:
-    Robert Mendoza
-"""
+"""Build the Activity Log worksheet."""
 
 from __future__ import annotations
 
@@ -15,7 +8,6 @@ from openpyxl.worksheet.worksheet import Worksheet
 from builder.constants import SheetNames
 from builder.styles import styles
 from builder.utils import apply_headers, apply_title, create_excel_table
-
 
 ACTIVITY_LOG_HEADERS: tuple[str, ...] = (
     "Activity ID",
@@ -31,39 +23,42 @@ _ACTIVITY_LOG_HEADER_ROW = 4
 
 
 def build_activity_log(workbook: Workbook) -> Worksheet:
-    """Build the empty Activity Log worksheet and table structure.
+    """Build and return the Activity Log worksheet.
 
     Args:
-        workbook: Target openpyxl workbook.
+        workbook: Workbook that will contain the Activity Log worksheet.
 
     Returns:
-        The completed Activity Log worksheet.
+        The newly created Activity Log worksheet.
 
     Raises:
-        TypeError: If ``workbook`` is not an openpyxl Workbook instance.
+        TypeError: If workbook is not an openpyxl Workbook instance.
         ValueError: If the Activity Log worksheet already exists.
     """
     if not isinstance(workbook, Workbook):
         raise TypeError("workbook must be an openpyxl Workbook instance.")
 
     worksheet_name = SheetNames.activity_log
+
     if worksheet_name in workbook.sheetnames:
         raise ValueError(f"Worksheet '{worksheet_name}' already exists.")
 
     worksheet = workbook.create_sheet(title=worksheet_name)
+
     apply_title(worksheet, "Activity Log")
+
     apply_headers(
         worksheet,
         ACTIVITY_LOG_HEADERS,
         row=_ACTIVITY_LOG_HEADER_ROW,
-        enable_filter=True,
+        enable_filter=False,
     )
 
     create_excel_table(
         worksheet=worksheet,
         table_name=ACTIVITY_LOG_TABLE_NAME,
         start_row=_ACTIVITY_LOG_HEADER_ROW,
-        end_row=_ACTIVITY_LOG_HEADER_ROW,
+        end_row=_ACTIVITY_LOG_HEADER_ROW + 1,
         start_column=1,
         end_column=len(ACTIVITY_LOG_HEADERS),
     )
@@ -74,7 +69,7 @@ def build_activity_log(workbook: Workbook) -> Worksheet:
     worksheet.column_dimensions["D"].width = 20
     worksheet.column_dimensions["E"].width = 40
     worksheet.column_dimensions["F"].width = 20
-    worksheet.sheet_view.zoomScale = 100
+
     worksheet.freeze_panes = "A5"
 
     return worksheet

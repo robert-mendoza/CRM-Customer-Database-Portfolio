@@ -29,12 +29,12 @@ def test_part4k_production(tmp_path) -> None:
     ]
     assert headers == list(ACTIVITY_LOG_HEADERS)
     assert ACTIVITY_LOG_TABLE_NAME in activity_log.tables
-    assert activity_log.tables[ACTIVITY_LOG_TABLE_NAME].ref == "A4:F4"
+    assert activity_log.tables[ACTIVITY_LOG_TABLE_NAME].ref == "A4:F5"
 
     instructions = workbook[SHEETS.instructions]
     assert instructions["A1"].value == "CRM Workbook Instructions"
 
     database = workbook[SHEETS.customer_database]
-    assert database.tables["CustomerDatabaseTable"].ref == "A4:J4"
+    assert database.tables["CustomerDatabaseTable"].ref == "A4:J5"
     assert len(database.data_validations.dataValidation) == 5
     assert len(workbook.defined_names) == 5

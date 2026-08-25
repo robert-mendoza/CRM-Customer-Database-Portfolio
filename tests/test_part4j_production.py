@@ -43,7 +43,7 @@ def test_part4j_production(tmp_path) -> None:
     assert [report.cell(row=row, column=1).value for row in range(7, 17)] == expected_checks
 
     database = workbook["03_Customer_Database"]
-    assert database.tables["CustomerDatabaseTable"].ref == "A4:J4"
+    assert database.tables["CustomerDatabaseTable"].ref == "A4:J5"
     assert len(database.data_validations.dataValidation) == 5
 
     assert len(workbook.defined_names) == 5

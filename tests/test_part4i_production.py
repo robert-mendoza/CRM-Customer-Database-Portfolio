@@ -48,7 +48,7 @@ def test_part4i_production_workbook() -> None:
         for index in range(1, len(CUSTOMER_HEADERS) + 1)
     ) == CUSTOMER_HEADERS
     assert CUSTOMER_TABLE_NAME in database.tables
-    assert database.tables[CUSTOMER_TABLE_NAME].ref == "A4:J4"
+    assert database.tables[CUSTOMER_TABLE_NAME].ref == "A4:J5"
     assert len(database.data_validations.dataValidation) == 5
 
     assert len(VALIDATION_DEFINED_NAMES) == 5

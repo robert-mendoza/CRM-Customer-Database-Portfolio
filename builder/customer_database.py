@@ -127,7 +127,7 @@ def build_customer_database(
         worksheet=worksheet,
         table_name=CUSTOMER_TABLE_NAME,
         start_row=4,
-        end_row=4,
+        end_row=5,
         start_column=1,
         end_column=len(headers),
     )

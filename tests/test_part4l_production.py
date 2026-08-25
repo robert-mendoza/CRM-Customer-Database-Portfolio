@@ -37,6 +37,6 @@ def test_part4l_production(tmp_path) -> None:
 
     assert workbook[SHEETS.customer_database].tables[
         "CustomerDatabaseTable"
-    ].ref == "A4:J4"
+    ].ref == "A4:J5"
     assert len(workbook[SHEETS.customer_database].data_validations.dataValidation) == 5
     assert len(workbook.defined_names) == 5

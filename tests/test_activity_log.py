@@ -25,7 +25,7 @@ def test_activity_log_builds_empty_sheet(tmp_path: Path) -> None:
     ] == list(ACTIVITY_LOG_HEADERS)
 
     assert ACTIVITY_LOG_TABLE_NAME in worksheet.tables
-    assert worksheet.tables[ACTIVITY_LOG_TABLE_NAME].ref == "A4:F4"
+    assert worksheet.tables[ACTIVITY_LOG_TABLE_NAME].ref == "A4:F5"
     assert worksheet.max_row == 4
     assert worksheet.max_column == 6
     assert worksheet.freeze_panes == "A5"
@@ -38,7 +38,7 @@ def test_activity_log_builds_empty_sheet(tmp_path: Path) -> None:
     assert SheetNames.activity_log in reopened.sheetnames
     reopened_worksheet = reopened[SheetNames.activity_log]
     assert ACTIVITY_LOG_TABLE_NAME in reopened_worksheet.tables
-    assert reopened_worksheet.tables[ACTIVITY_LOG_TABLE_NAME].ref == "A4:F4"
+    assert reopened_worksheet.tables[ACTIVITY_LOG_TABLE_NAME].ref == "A4:F5"
 
 
 def test_activity_log_requires_openpyxl_workbook() -> None:
