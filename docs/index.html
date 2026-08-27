@@ -4,224 +4,507 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>CRM Customer Database Builder</title>
+    <title>CRM Customer Database Builder | Portfolio</title>
 
     <meta
         name="description"
-        content="A Python and OpenPyXL project for generating a structured customer data management workbook."
+        content="Portfolio demonstration of a Python and OpenPyXL CRM Customer Database Builder with customer records, validation, dashboard reporting, data quality checks, activity logging, and operational instructions."
     >
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
 
     <header class="hero">
         <div class="container">
-            <p class="eyebrow">Python · OpenPyXL · Excel · Pytest</p>
+            <p class="eyebrow">Portfolio Project</p>
 
             <h1>CRM Customer Database Builder</h1>
 
-            <p class="hero-description">
-                A structured customer data management workbook built with
-                Python and OpenPyXL for CRM data entry, validation,
-                reporting, data quality monitoring, and activity tracking.
+            <p class="hero-lead">
+                A Python and OpenPyXL project that generates a structured
+                customer data management workbook for organized CRM data
+                entry, validation, reporting, and activity tracking.
             </p>
 
             <div class="hero-actions">
                 <a
-                    href="https://github.com/robert-mendoza/CRM-Customer-Database-Builder"
                     class="button button-primary"
+                    href="Customer_Data_Management_Portfolio_Demo.xlsx"
                 >
-                    View Source Code
+                    Download Portfolio Demo
                 </a>
 
                 <a
-                    href="#workbook"
                     class="button button-secondary"
+                    href="https://github.com/robert-mendoza/CRM-Customer-Database-Builder"
+                    target="_blank"
+                    rel="noopener noreferrer"
                 >
-                    Explore the Workbook
+                    View GitHub Repository
                 </a>
             </div>
         </div>
     </header>
 
-    <main>
+    <main id="main-content">
 
         <section class="section" id="overview">
             <div class="container">
+                <p class="section-label">01</p>
 
                 <h2>Project Overview</h2>
 
                 <p>
-                    This project generates a structured Excel workbook for
-                    managing customer records and supporting CRM-style data
-                    workflows. The implementation focuses on controlled data
-                    entry, validation, reporting, data quality checks, and
-                    activity tracking.
+                    This project demonstrates the design and automated
+                    generation of a structured CRM customer database workbook.
+                    The workbook is intended to support customer data entry,
+                    controlled classification, data-quality review, summary
+                    reporting, and customer activity tracking.
                 </p>
 
-                <div class="feature-grid">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <strong>100</strong>
+                        <span>CRM customer records</span>
+                    </div>
 
-                    <article class="feature-card">
-                        <h3>Structured Data</h3>
-                        <p>
-                            A dedicated customer database with a defined
-                            10-field schema and Excel table structure.
-                        </p>
-                    </article>
+                    <div class="stat-card">
+                        <strong>7</strong>
+                        <span>Integrated worksheets</span>
+                    </div>
 
-                    <article class="feature-card">
-                        <h3>Data Validation</h3>
-                        <p>
-                            Controlled dropdown lists help maintain consistent
-                            customer data.
-                        </p>
-                    </article>
+                    <div class="stat-card">
+                        <strong>5</strong>
+                        <span>Activity Log demonstrations</span>
+                    </div>
 
-                    <article class="feature-card">
-                        <h3>Dashboard</h3>
-                        <p>
-                            Dynamic KPI formulas summarize customer status
-                            and database activity.
-                        </p>
-                    </article>
-
-                    <article class="feature-card">
-                        <h3>Data Quality</h3>
-                        <p>
-                            Missing-field checks help identify incomplete
-                            customer records.
-                        </p>
-                    </article>
-
-                    <article class="feature-card">
-                        <h3>Activity Tracking</h3>
-                        <p>
-                            A structured activity log records customer-related
-                            interactions and events.
-                        </p>
-                    </article>
-
-                    <article class="feature-card">
-                        <h3>User Instructions</h3>
-                        <p>
-                            Built-in documentation explains the workbook
-                            workflow and field definitions.
-                        </p>
-                    </article>
-
+                    <div class="stat-card">
+                        <strong>10</strong>
+                        <span>Customer database fields</span>
+                    </div>
                 </div>
             </div>
         </section>
 
         <section class="section section-alt" id="workbook">
             <div class="container">
+                <p class="section-label">02</p>
 
                 <h2>Workbook Structure</h2>
 
                 <p>
                     The production workbook contains seven integrated
-                    worksheets.
+                    worksheets. Each worksheet has a defined purpose within
+                    the CRM data-management workflow.
                 </p>
 
                 <div class="workbook-grid">
 
                     <article class="workbook-card">
-                        <span>01</span>
+                        <span class="sheet-number">01</span>
                         <h3>Cover</h3>
-                        <p>Workbook overview and project information.</p>
+                        <p>
+                            Provides project context and identifies the
+                            workbook.
+                        </p>
                     </article>
 
                     <article class="workbook-card">
-                        <span>02</span>
+                        <span class="sheet-number">02</span>
                         <h3>Dashboard</h3>
-                        <p>Dynamic customer KPIs and summary metrics.</p>
+                        <p>
+                            Provides summary information and customer-related
+                            metrics.
+                        </p>
                     </article>
 
                     <article class="workbook-card">
-                        <span>03</span>
+                        <span class="sheet-number">03</span>
                         <h3>Customer Database</h3>
-                        <p>Primary structured customer data-entry table.</p>
+                        <p>
+                            Primary customer data-entry table containing the
+                            100-record portfolio dataset.
+                        </p>
                     </article>
 
                     <article class="workbook-card">
-                        <span>04</span>
+                        <span class="sheet-number">04</span>
                         <h3>Validation Lists</h3>
-                        <p>Controlled values used by dropdown validation.</p>
+                        <p>
+                            Stores controlled values used by customer-data
+                            dropdown fields.
+                        </p>
                     </article>
 
                     <article class="workbook-card">
-                        <span>05</span>
+                        <span class="sheet-number">05</span>
                         <h3>Data Quality Report</h3>
-                        <p>Checks for missing values across customer records.</p>
+                        <p>
+                            Supports review of the condition and quality of
+                            the customer dataset.
+                        </p>
                     </article>
 
                     <article class="workbook-card">
-                        <span>06</span>
+                        <span class="sheet-number">06</span>
                         <h3>Activity Log</h3>
-                        <p>Structured customer interaction tracking.</p>
+                        <p>
+                            Records customer-related interactions and
+                            follow-up activities.
+                        </p>
                     </article>
 
                     <article class="workbook-card">
-                        <span>07</span>
+                        <span class="sheet-number">07</span>
                         <h3>Instructions</h3>
-                        <p>Workbook workflow and field documentation.</p>
+                        <p>
+                            Provides operational guidance for working with
+                            the workbook.
+                        </p>
                     </article>
 
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="features">
+            <div class="container">
+                <p class="section-label">03</p>
+
+                <h2>Key Features</h2>
+
+                <div class="feature-grid">
+
+                    <article class="feature-card">
+                        <h3>Structured Customer Data</h3>
+                        <p>
+                            The Customer Database uses a defined ten-field
+                            schema and contains 100 demonstration records.
+                        </p>
+                    </article>
+
+                    <article class="feature-card">
+                        <h3>Controlled Data Validation</h3>
+                        <p>
+                            Industry, Customer Type, Customer Status, Lead
+                            Source, and Priority use controlled dropdown
+                            values.
+                        </p>
+                    </article>
+
+                    <article class="feature-card">
+                        <h3>Data Quality Review</h3>
+                        <p>
+                            The Data Quality Report provides a dedicated area
+                            for reviewing the condition of the customer data.
+                        </p>
+                    </article>
+
+                    <article class="feature-card">
+                        <h3>Dashboard Reporting</h3>
+                        <p>
+                            The Dashboard provides a summary view based on the
+                            underlying customer records.
+                        </p>
+                    </article>
+
+                    <article class="feature-card">
+                        <h3>Activity Tracking</h3>
+                        <p>
+                            The Activity Log demonstrates five customer
+                            activities linked to existing Customer IDs.
+                        </p>
+                    </article>
+
+                    <article class="feature-card">
+                        <h3>Operational Documentation</h3>
+                        <p>
+                            The Instructions worksheet explains workbook
+                            structure, data-entry workflow, validation,
+                            activity logging, and field usage.
+                        </p>
+                    </article>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-alt" id="screenshots">
+            <div class="container">
+                <p class="section-label">04</p>
+
+                <h2>Workbook Screenshots</h2>
+
+                <p>
+                    The following screenshots were captured from the validated
+                    portfolio demonstration workbook.
+                </p>
+
+                <div class="screenshot-grid">
+
+                    <figure class="screenshot-card">
+                        <img
+                            src="screenshots/01-cover.PNG"
+                            alt="CRM Customer Database Builder Cover worksheet showing the project title and workbook overview."
+                            loading="lazy"
+                        >
+
+                        <figcaption>
+                            <strong>01 - Cover</strong>
+                            <span>
+                                Project context and workbook overview.
+                            </span>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="screenshot-card">
+                        <img
+                            src="screenshots/04-dashboard.PNG"
+                            alt="Dashboard worksheet showing summary information for the CRM customer dataset."
+                            loading="lazy"
+                        >
+
+                        <figcaption>
+                            <strong>02 - Dashboard</strong>
+                            <span>
+                                Customer summary and dashboard metrics.
+                            </span>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="screenshot-card">
+                        <img
+                            src="screenshots/03-customer-database.PNG"
+                            alt="Customer Database worksheet showing the structured customer table with CRM records."
+                            loading="lazy"
+                        >
+
+                        <figcaption>
+                            <strong>03 - Customer Database</strong>
+                            <span>
+                                Primary customer data-entry table.
+                            </span>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="screenshot-card">
+                        <img
+                            src="screenshots/02-validation-lists.PNG"
+                            alt="Validation Lists worksheet showing controlled values used by workbook dropdown fields."
+                            loading="lazy"
+                        >
+
+                        <figcaption>
+                            <strong>04 - Validation Lists</strong>
+                            <span>
+                                Controlled values for data validation.
+                            </span>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="screenshot-card">
+                        <img
+                            src="screenshots/05-data-quality-report.PNG"
+                            alt="Data Quality Report worksheet showing the data-quality review area for the CRM dataset."
+                            loading="lazy"
+                        >
+
+                        <figcaption>
+                            <strong>05 - Data Quality Report</strong>
+                            <span>
+                                Customer data-quality review.
+                            </span>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="screenshot-card">
+                        <img
+                            src="screenshots/06-activity-log%20%282%29.PNG"
+                            alt="Activity Log worksheet showing five customer activities with Activity IDs, timestamps, Customer IDs, activity types, descriptions, and Portfolio Demo as the user."
+                            loading="lazy"
+                        >
+
+                        <figcaption>
+                            <strong>06 - Activity Log</strong>
+                            <span>
+                                Five demonstration customer activities.
+                            </span>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="screenshot-card">
+                        <img
+                            src="screenshots/07-instructions.PNG"
+                            alt="Instructions worksheet showing CRM Workbook Instructions, workbook structure, data-entry guidance, validation guidance, and field descriptions."
+                            loading="lazy"
+                        >
+
+                        <figcaption>
+                            <strong>07 - Instructions</strong>
+                            <span>
+                                Operational guidance and field documentation.
+                            </span>
+                        </figcaption>
+                    </figure>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="validation">
+            <div class="container">
+                <p class="section-label">05</p>
+
+                <h2>Validation</h2>
+
+                <p>
+                    The workbook was developed with automated validation and
+                    was reviewed against the intended production structure.
+                    The portfolio screenshots were also checked against the
+                    regenerated demonstration workbook.
+                </p>
+
+                <div class="validation-grid">
+
+                    <div class="validation-card">
+                        <strong>Automated Tests</strong>
+                        <span>14 / 14 Passed</span>
+                        <p>
+                            Baseline project test suite passed during
+                            validation.
+                        </p>
+                    </div>
+
+                    <div class="validation-card">
+                        <strong>Instructions Tests</strong>
+                        <span>3 / 3 Passed</span>
+                        <p>
+                            Instructions worksheet baseline tests passed
+                            after restoration.
+                        </p>
+                    </div>
+
+                    <div class="validation-card">
+                        <strong>Portfolio Review</strong>
+                        <span>Completed</span>
+                        <p>
+                            Activity Log and Instructions portfolio screenshots
+                            were reviewed against the regenerated workbook.
+                        </p>
+                    </div>
+
+                    <div class="validation-card">
+                        <strong>Activity Log</strong>
+                        <span>A4:F9</span>
+                        <p>
+                            Five demonstration activities are represented in
+                            the Activity Log table.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="section section-alt" id="activity-log">
+            <div class="container">
+                <p class="section-label">06</p>
+
+                <h2>Activity Log Demonstration</h2>
+
+                <p>
+                    The portfolio workbook includes five sample activities.
+                    Each activity references an existing Customer ID and
+                    demonstrates how customer-related interactions can be
+                    recorded.
+                </p>
+
+                <div class="activity-table-wrapper">
+                    <table>
+                        <caption>
+                            Five Activity Log demonstration records
+                        </caption>
+
+                        <thead>
+                            <tr>
+                                <th scope="col">Activity ID</th>
+                                <th scope="col">Customer ID</th>
+                                <th scope="col">Activity Type</th>
+                                <th scope="col">Date</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>ACT-0001</td>
+                                <td>CUST-0001</td>
+                                <td>New Customer</td>
+                                <td>August 20, 2026</td>
+                            </tr>
+
+                            <tr>
+                                <td>ACT-0002</td>
+                                <td>CUST-0025</td>
+                                <td>Data Review</td>
+                                <td>August 21, 2026</td>
+                            </tr>
+
+                            <tr>
+                                <td>ACT-0003</td>
+                                <td>CUST-0050</td>
+                                <td>Contact Update</td>
+                                <td>August 22, 2026</td>
+                            </tr>
+
+                            <tr>
+                                <td>ACT-0004</td>
+                                <td>CUST-0075</td>
+                                <td>Follow-up</td>
+                                <td>August 24, 2026</td>
+                            </tr>
+
+                            <tr>
+                                <td>ACT-0005</td>
+                                <td>CUST-0100</td>
+                                <td>Data Quality Check</td>
+                                <td>August 25, 2026</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </section>
 
         <section class="section" id="technology">
             <div class="container">
+                <p class="section-label">07</p>
 
-                <h2>Technology Stack</h2>
+                <h2>Technology</h2>
 
-                <div class="tech-list">
+                <div class="technology-list">
                     <span>Python</span>
                     <span>OpenPyXL</span>
-                    <span>Microsoft Excel</span>
                     <span>Pytest</span>
+                    <span>Excel</span>
                     <span>Git</span>
                     <span>GitHub</span>
                 </div>
 
-            </div>
-        </section>
-
-        <section class="section section-alt" id="validation">
-            <div class="container">
-
-                <h2>Validation and Quality Assurance</h2>
-
-                <p>
-                    The final production baseline was validated through
-                    automated tests and repository checks.
+                <p class="technology-description">
+                    The workbook is generated programmatically rather than
+                    assembled manually. The builder architecture separates
+                    workbook components and uses automated tests to validate
+                    the implementation.
                 </p>
-
-                <div class="validation-card">
-
-                    <div class="validation-number">
-                        14/14
-                    </div>
-
-                    <div>
-                        <h3>Automated Tests Passed</h3>
-
-                        <p>
-                            The production test suite completed successfully
-                            with 14 passing tests.
-                        </p>
-                    </div>
-
-                </div>
-
             </div>
         </section>
 
-        <section class="section" id="release">
+        <section class="section section-alt" id="release">
             <div class="container">
+                <p class="section-label">08</p>
 
                 <h2>Release Status</h2>
 
@@ -233,13 +516,23 @@
                     </div>
 
                     <div>
-                        <strong>Release Status</strong>
-                        <span>Complete</span>
+                        <strong>Customer Records</strong>
+                        <span>100</span>
                     </div>
 
                     <div>
-                        <strong>Test Results</strong>
+                        <strong>Workbook Sheets</strong>
+                        <span>7</span>
+                    </div>
+
+                    <div>
+                        <strong>Test Baseline</strong>
                         <span>14 / 14 Passed</span>
+                    </div>
+
+                    <div>
+                        <strong>Activity Log Records</strong>
+                        <span>5</span>
                     </div>
 
                     <div>
@@ -248,7 +541,39 @@
                     </div>
 
                 </div>
+            </div>
+        </section>
 
+        <section class="section" id="download">
+            <div class="container download-section">
+                <p class="section-label">09</p>
+
+                <h2>Portfolio Demo</h2>
+
+                <p>
+                    Download the demonstration workbook to inspect the
+                    generated CRM structure, customer data, validation lists,
+                    dashboard, data-quality report, Activity Log, and
+                    Instructions worksheet.
+                </p>
+
+                <a
+                    class="button button-primary"
+                    href="Customer_Data_Management_Portfolio_Demo.xlsx"
+                >
+                    Download the Excel Portfolio Demo
+                </a>
+
+                <p class="repository-link">
+                    Source code:
+                    <a
+                        href="https://github.com/robert-mendoza/CRM-Customer-Database-Builder"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        CRM Customer Database Builder on GitHub
+                    </a>
+                </p>
             </div>
         </section>
 
@@ -256,15 +581,13 @@
 
     <footer>
         <div class="container">
-
             <p>
-                CRM Customer Database Builder
+                CRM Customer Database Builder Portfolio
             </p>
 
             <p>
-                Built with Python and OpenPyXL
+                Built with Python, OpenPyXL, Excel, Git, and GitHub.
             </p>
-
         </div>
     </footer>
 
