@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import shutil
 import sys
+from datetime import datetime
 from pathlib import Path
 
 
@@ -43,6 +44,53 @@ CUSTOMER_FIRST_DATA_ROW = 5
 CUSTOMER_LAST_DATA_ROW = 104
 CUSTOMER_COLUMNS = 10
 EXPECTED_RECORD_COUNT = 100
+
+ACTIVITY_FIRST_DATA_ROW = 5
+ACTIVITY_LAST_DATA_ROW = 9
+EXPECTED_ACTIVITY_COUNT = 5
+
+DEMO_ACTIVITIES: tuple[tuple[object, ...], ...] = (
+    (
+        "ACT-0001",
+        datetime(2026, 8, 20, 9, 15),
+        "CUST-0001",
+        "New Customer",
+        "Customer record created and initial information entered.",
+        "Portfolio Demo",
+    ),
+    (
+        "ACT-0002",
+        datetime(2026, 8, 21, 10, 30),
+        "CUST-0025",
+        "Data Review",
+        "Customer information reviewed for completeness and accuracy.",
+        "Portfolio Demo",
+    ),
+    (
+        "ACT-0003",
+        datetime(2026, 8, 22, 13, 45),
+        "CUST-0050",
+        "Contact Update",
+        "Customer contact information reviewed and updated.",
+        "Portfolio Demo",
+    ),
+    (
+        "ACT-0004",
+        datetime(2026, 8, 24, 14, 20),
+        "CUST-0075",
+        "Follow-up",
+        "Follow-up activity recorded for customer communication.",
+        "Portfolio Demo",
+    ),
+    (
+        "ACT-0005",
+        datetime(2026, 8, 25, 16, 10),
+        "CUST-0100",
+        "Data Quality Check",
+        "Customer record checked as part of the data-quality review.",
+        "Portfolio Demo",
+    ),
+)
 
 
 def _read_customer_records(
@@ -118,7 +166,7 @@ def _build_demo(
     records: list[list[object]],
     output_path: Path,
 ) -> Path:
-    """Build the production workbook and populate customer records."""
+    """Build the production workbook and populate demo records."""
     output_path.parent.mkdir(
         parents=True,
         exist_ok=True,
@@ -158,10 +206,27 @@ def _build_demo(
             f"A4:J{CUSTOMER_LAST_DATA_ROW}"
         )
 
+        for row_offset, activity in enumerate(
+            DEMO_ACTIVITIES
+        ):
+            row_number = ACTIVITY_FIRST_DATA_ROW + row_offset
+
+            for column_number, value in enumerate(
+                activity,
+                start=1,
+            ):
+                activity_sheet.cell(
+                    row=row_number,
+                    column=column_number,
+                    value=value,
+                )
+
         activity_table = activity_sheet.tables[
             ACTIVITY_LOG_TABLE_NAME
         ]
-        activity_table.ref = "A4:F5"
+        activity_table.ref = (
+            f"A4:F{ACTIVITY_LAST_DATA_ROW}"
+        )
 
         workbook.save(output_path)
 
@@ -214,10 +279,36 @@ def _validate_output(output_path: Path) -> None:
                 f"{customer_table.ref}"
             )
 
-        if activity_table.ref != "A4:F5":
+        if activity_table.ref != "A4:F9":
             raise AssertionError(
                 f"Unexpected Activity Log table range: "
                 f"{activity_table.ref}"
+            )
+
+        activity_records = [
+            [
+                activity_sheet.cell(row, column).value
+                for column in range(1, 7)
+            ]
+            for row in range(
+                ACTIVITY_FIRST_DATA_ROW,
+                ACTIVITY_LAST_DATA_ROW + 1,
+            )
+        ]
+
+        if len(activity_records) != EXPECTED_ACTIVITY_COUNT:
+            raise AssertionError(
+                f"Expected {EXPECTED_ACTIVITY_COUNT} activity records, "
+                f"found {len(activity_records)}."
+            )
+
+        if activity_records != [
+            list(activity)
+            for activity in DEMO_ACTIVITIES
+        ]:
+            raise AssertionError(
+                "Portfolio demo Activity Log records do not "
+                "match the expected demo activities."
             )
 
         validation_count = len(
@@ -254,6 +345,25 @@ def _validate_output(output_path: Path) -> None:
         ).value != "CUST-0100":
             raise AssertionError(
                 "Last customer record is not CUST-0100."
+            )
+
+        customer_ids = [
+            customer_sheet.cell(row, 1).value
+            for row in range(
+                CUSTOMER_FIRST_DATA_ROW,
+                CUSTOMER_LAST_DATA_ROW + 1,
+            )
+        ]
+
+        if len(customer_ids) != EXPECTED_RECORD_COUNT:
+            raise AssertionError(
+                f"Expected {EXPECTED_RECORD_COUNT} customer IDs, "
+                f"found {len(customer_ids)}."
+            )
+
+        if len(set(customer_ids)) != EXPECTED_RECORD_COUNT:
+            raise AssertionError(
+                "Customer IDs are not unique."
             )
 
         if customer_sheet.max_row != CUSTOMER_LAST_DATA_ROW:
@@ -333,7 +443,10 @@ def main() -> None:
             "Customer table: A4:J104"
         )
         print(
-            "Activity table: A4:F5"
+            "Activity records: 5"
+        )
+        print(
+            "Activity table: A4:F9"
         )
         print(
             "Customer validations: 5"
